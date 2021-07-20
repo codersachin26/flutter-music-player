@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
+import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListsWidget.dart';
 
 class PlayListScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class _PlayListScreenState extends State<PlayListScreen> {
         centerTitle: true,
       ),
       body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.height,
+        decoration: myDecoration(),
         child: Column(
           children: <Widget>[PlayListsWidget(), BottomPlayerWidget()],
         ),
