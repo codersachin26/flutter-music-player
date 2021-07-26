@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/pages/playListScreen.dart';
 import 'package:music_player/pages/playListsScreen.dart';
+import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/themeData.dart';
 
-main() {
+void main() {
+  OpenDb.openDB();
   runApp(App());
 }
 
