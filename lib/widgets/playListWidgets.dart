@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListsContainer.dart';
 import 'package:music_player/widgets/songListCart.dart';
@@ -25,7 +26,7 @@ class PlayListsWidget extends StatelessWidget {
                 ),
                 SongListCard(
                   listIcon: Icons.favorite,
-                  listName: "Favotite",
+                  listName: "Favorite",
                   iconColor: Colors.red,
                 )
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/dialogBox.dart';
 
@@ -14,13 +15,6 @@ class PlayListContainer extends StatefulWidget {
 }
 
 class _PlayListContainerState extends State<PlayListContainer> {
-  // GlobalKey<_PlayListContainerState> playListGlobalKey;
-  // @override
-  // void initState() {
-  //   playListGlobalKey = new GlobalKey<_PlayListContainerState>();
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -78,23 +72,34 @@ class PlayListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-          tileColor: Colors.black,
-          leading: Image.asset(
-            "assests/music.jpg",
-          ),
-          title: Text(listname['name'], style: TextStyle(color: Colors.white)),
-          subtitle: Text("26 tracks", style: TextStyle(color: Colors.white)),
-          trailing: IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) =>
-                        removePlayListDialog(context, listname));
-              })),
+        tileColor: Colors.black,
+        leading: Image.asset(
+          "assests/music.jpg",
+        ),
+        title: Text(listname['name'], style: TextStyle(color: Colors.white)),
+        subtitle: Text("26 tracks", style: TextStyle(color: Colors.white)),
+        trailing: IconButton(
+            icon: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      removePlayListDialog(context, listname));
+            }),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SongsListScreen(
+                        playListName: listname['name'],
+                        playListIcon: null,
+                        iconColor: null,
+                      )));
+        },
+      ),
     );
   }
 }

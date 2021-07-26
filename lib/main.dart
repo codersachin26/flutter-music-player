@@ -15,7 +15,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: MyTheme.darkBlueTheme(context),
-      home: PlayListScreen(),
+      home: PlayListsScreen(),
+      routes: {'/playlist': (context) => PlayListScreen()},
     );
   }
 }
