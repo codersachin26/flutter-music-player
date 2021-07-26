@@ -1,6 +1,6 @@
 // song list card
 import 'package:flutter/material.dart';
-import 'package:music_player/pages/playListScreen.dart';
+import 'package:music_player/pages/songsListScreen.dart';
 
 class SongListCard extends StatelessWidget {
   final String listName;
@@ -39,7 +39,7 @@ class SongListCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => PlayListScreen(
+                builder: (context) => SongsListScreen(
                       playListName: listName,
                       playListIcon: listIcon,
                       iconColor: iconColor,
