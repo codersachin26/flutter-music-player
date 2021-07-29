@@ -36,14 +36,18 @@ class SongListCard extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SongsListScreen(
-                      playListName: listName,
-                      playListIcon: listIcon,
-                      iconColor: iconColor,
-                    )));
+        if (listName == 'All Songs') {
+          Navigator.pushNamed(context, '/allSongs');
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SongsListScreen(
+                        playListName: listName,
+                        playListIcon: listIcon,
+                        iconColor: iconColor,
+                      )));
+        }
       },
     );
   }

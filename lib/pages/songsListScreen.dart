@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
@@ -25,10 +26,13 @@ class _SongsListScreenState extends State<SongsListScreen> {
   void initState() {
     super.initState();
     getSongs();
+    // print("songs : $songs");
   }
 
   void getSongs() async {
     songs = await getTracks(OpenDb.db, playListName);
+    OpenDb.currentSongList = songs;
+    print("songsss : $songs");
   }
 
   @override
@@ -73,7 +77,7 @@ class PlayListName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.14,
       child: Column(
         children: [
           Padding(
@@ -125,8 +129,7 @@ class PlayListName extends StatelessWidget {
 
 // song play list
 class PlayList extends StatefulWidget {
-  final List<Map<String, dynamic>> songs;
-  PlayList({Key key, this.songs}) : super(key: key);
+  PlayList({Key key}) : super(key: key);
 
   @override
   _PlayListState createState() => _PlayListState();
@@ -135,15 +138,18 @@ class PlayList extends StatefulWidget {
 class _PlayListState extends State<PlayList> {
   @override
   Widget build(BuildContext context) {
+    print("OpenDb-lenght : ${OpenDb.currentSongList}");
     return Expanded(
         child: Container(
-      child: widget.songs == null
-          ? Text("no song")
+      child: OpenDb.currentSongList.length == null
+          ? Center(
+              child: Text("no songs"),
+            )
           : ListView.builder(
-              itemCount: widget.songs.length,
-              itemBuilder: (context, idx) {
+              itemCount: OpenDb.currentSongList.length,
+              itemBuilder: (BuildContext context, idx) {
                 return SongCard(
-                  song: widget.songs[idx],
+                  song: OpenDb.currentSongList[idx],
                 );
               },
             ),
@@ -160,8 +166,8 @@ class SongCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.music_note),
-      title: Text(song['track']),
-      subtitle: Text(song['artist']),
+      title: Text(song['track'].toString()),
+      subtitle: Text(song['artist'].toString()),
       onTap: () {},
     );
   }

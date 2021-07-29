@@ -8,27 +8,31 @@ class BottomPlayerWidget extends StatefulWidget {
 class _BottomPlayerWidgetState extends State<BottomPlayerWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * .11,
-      width: MediaQuery.of(context).size.width * .97,
-      // color: Colors.red,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [SongArt(), SongTitle(), PlayorPauseIcon()],
-            ),
-          )
-        ],
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.blueGrey[900],
-      ),
-    );
+    return InkWell(
+        child: Container(
+          height: MediaQuery.of(context).size.height * .11,
+          width: MediaQuery.of(context).size.width,
+          // color: Colors.red,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [SongArt(), SongTitle(), PlayorPauseIcon()],
+                ),
+              )
+            ],
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.blueGrey[900],
+          ),
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, '/player');
+        });
   }
 }
 
@@ -69,8 +73,14 @@ class SongTitle extends StatelessWidget {
 }
 
 //play or puase btn widget
-class PlayorPauseIcon extends StatelessWidget {
+class PlayorPauseIcon extends StatefulWidget {
+  @override
+  _PlayorPauseIconState createState() => _PlayorPauseIconState();
+}
+
+class _PlayorPauseIconState extends State<PlayorPauseIcon> {
   bool isplay = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(

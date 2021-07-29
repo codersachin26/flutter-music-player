@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/pages/AllSongListScreen.dart';
 import 'package:music_player/pages/PlayerScreen.dart';
 import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/pages/playListsScreen.dart';
@@ -16,8 +17,12 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: MyTheme.darkBlueTheme(context),
-      home: MusicPlayer(),
-      routes: {'/playlist': (context) => SongsListScreen()},
+      home: PlayListsScreen(),
+      routes: {
+        '/playlist': (context) => SongsListScreen(),
+        '/player': (context) => MusicPlayer(),
+        '/allSongs': (context) => AllSongScreen()
+      },
     );
   }
 }

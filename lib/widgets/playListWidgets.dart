@@ -20,13 +20,13 @@ class PlayListsWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SongListCard(
-                  listName: "All Song",
+                  listName: "All Songs",
                   listIcon: Icons.music_note,
                   iconColor: Colors.deepPurple,
                 ),
                 SongListCard(
                   listIcon: Icons.favorite,
-                  listName: "Favorite",
+                  listName: "Favorites",
                   iconColor: Colors.red,
                 )
               ],

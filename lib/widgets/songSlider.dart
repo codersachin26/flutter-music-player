@@ -6,7 +6,7 @@ class SongSlider extends StatefulWidget {
 }
 
 class _SongSliderState extends State<SongSlider> {
-  double myvalue = 7.0;
+  double myvalue = 0.0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +16,7 @@ class _SongSliderState extends State<SongSlider> {
               setState(() {
                 myvalue = value;
               });
-              print(value);
+              print(myvalue);
             }));
   }
 }
