@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/utils/db.dart';
+import 'package:music_player/widgets/playListNameCard.dart';
 import 'package:music_player/widgets/playListsContainer.dart';
 
 newPlaylistDialogBox(BuildContext context) {
@@ -116,6 +117,33 @@ removePlayListDialog(BuildContext context, Map<String, dynamic> playlist) {
                     )),
               ],
             ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+addToPlayListDialog(BuildContext context) {
+  return Dialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+    child: Container(
+      height: 250,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(height: 5),
+          Text(
+            "Add to Playlist",
+            style: TextStyle(fontSize: 15),
+          ),
+          Divider(),
+          Expanded(
+            child: ListView.builder(
+                itemCount: OpenDb.playlists.length,
+                itemBuilder: (context, idx) => PlayListNamebtn(
+                      playlist: OpenDb.playlists[idx],
+                    )),
           )
         ],
       ),

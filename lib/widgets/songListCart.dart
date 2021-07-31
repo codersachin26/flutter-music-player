@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:music_player/pages/songsListScreen.dart';
 
 class SongListCard extends StatelessWidget {
-  final String listName;
+  final Map<String, dynamic> playlist;
   final IconData listIcon;
   final Color iconColor;
 
-  const SongListCard({Key key, this.listName, this.listIcon, this.iconColor})
+  const SongListCard({Key key, this.playlist, this.listIcon, this.iconColor})
       : super(key: key);
 
   @override
@@ -29,21 +29,21 @@ class SongListCard extends StatelessWidget {
               color: iconColor,
             ),
             Text(
-              "$listName",
+              "${playlist['name']}",
               style: TextStyle(fontSize: 15, color: Colors.white),
             )
           ],
         ),
       ),
       onTap: () {
-        if (listName == 'All Songs') {
+        if (playlist['name'] == 'All Songs') {
           Navigator.pushNamed(context, '/allSongs');
         } else {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => SongsListScreen(
-                        playListName: listName,
+                        playList: playlist,
                         playListIcon: listIcon,
                         iconColor: iconColor,
                       )));

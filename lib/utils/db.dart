@@ -9,11 +9,12 @@ class OpenDb {
   static Database db;
   static List<int> pickedSong = [];
   static List<SongInfo> allSongs;
-  static List<Map<String, dynamic>> currentSongList = [];
+  static List<Map<String, dynamic>> currentSongList;
   static List<Map<String, dynamic>> playlists;
   static void openDB() async {
     db = await getdb();
     playlists = await getPlayLists(db);
+    OpenDb.currentSongList = await getTracks(OpenDb.db, "Favorites");
   }
 }
 
@@ -29,26 +30,21 @@ Future<Database> getdb() async {
     db.execute(
       'CREATE TABLE favorites(track TEXT, artist TEXT,url TEXT)',
     );
-    db.insert("playlist", {'name': 'favorits', 'tablename': 'favorits'});
+    db.insert("playlist", {'name': 'favorites', 'tablename': 'favorites'});
   }, version: 1);
-  // print("DB object : $db");
+
   return db;
 }
 
 // create new playlist table
 void createPlayList(Database db, String playlistname) async {
-  final tableName = playlistname.replaceAll(" ", "");
-  // print("table : $tableName");
-  // print("playlistname : $playlistname");
+  final tableName = playlistname.replaceAll(" ", "").toLowerCase();
   Map<String, String> values = {'name': playlistname, 'tablename': tableName};
+  print("Map----> $values");
   await db.execute('CREATE TABLE $tableName(track TEXT, artist TEXT,url TEXT)');
   final id = await db.insert('playlist', values);
   print("ID : $id");
 }
-
-// void just(Database db, String playlistname) {
-//   createPlayList(db, playlistname);
-// }
 
 // insert track data into playlist
 Future<void> insertTrack(
@@ -64,9 +60,10 @@ Future<void> insertTrack(
 
 // get all playlist tracks
 Future<List<Map<String, dynamic>>> getTracks(
-    Database db, String playlistname) async {
-  List<Map<String, dynamic>> songs = await db.query(playlistname);
-  print("await : $songs");
+    Database db, String tablename) async {
+  print("getTracks : $tablename");
+  List<Map<String, dynamic>> songs = await db.query(tablename);
+  // print("await : $songs");
   return songs;
 }
 

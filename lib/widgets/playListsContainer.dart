@@ -17,6 +17,7 @@ class PlayListContainer extends StatefulWidget {
 class _PlayListContainerState extends State<PlayListContainer> {
   @override
   Widget build(BuildContext context) {
+    print("playlistcontainer----");
     return Expanded(
       child: Container(
         child: Column(
@@ -47,6 +48,7 @@ class _PlayListContainerState extends State<PlayListContainer> {
                     : ListView.builder(
                         itemCount: OpenDb.playlists.length,
                         itemBuilder: (BuildContext context, idx) {
+                          print("builder----");
                           return PlayListView(
                             listname: OpenDb.playlists[idx],
                             idx: idx,
@@ -90,11 +92,12 @@ class PlayListView extends StatelessWidget {
                       removePlayListDialog(context, listname));
             }),
         onTap: () {
+          print("onpress : ---- $listname");
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => SongsListScreen(
-                        playListName: listname['name'],
+                        playList: listname,
                         playListIcon: null,
                         iconColor: null,
                       )));

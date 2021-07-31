@@ -1,38 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 
 class SongsListScreen extends StatefulWidget {
-  final String playListName;
+  final Map<String, dynamic> playList;
   final IconData playListIcon;
   final Color iconColor;
 
   const SongsListScreen(
-      {Key key, this.playListName, this.playListIcon, this.iconColor})
+      {Key key, this.playList, this.playListIcon, this.iconColor})
       : super(key: key);
   @override
-  _SongsListScreenState createState() => _SongsListScreenState(playListName);
+  _SongsListScreenState createState() => _SongsListScreenState(playList);
 }
 
 class _SongsListScreenState extends State<SongsListScreen> {
-  List<Map<String, dynamic>> songs;
-  final String playListName;
+  final Map<String, dynamic> playList;
 
-  _SongsListScreenState(this.playListName);
+  _SongsListScreenState(this.playList);
 
   @override
   void initState() {
     super.initState();
     getSongs();
-    // print("songs : $songs");
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {});
+      print("timer------");
+      timer.cancel();
+    });
   }
 
   void getSongs() async {
-    songs = await getTracks(OpenDb.db, playListName);
-    OpenDb.currentSongList = songs;
-    print("songsss : $songs");
+    OpenDb.currentSongList = await getTracks(OpenDb.db, playList['tablename']);
   }
 
   @override
@@ -48,7 +50,7 @@ class _SongsListScreenState extends State<SongsListScreen> {
             children: [
               PlayListName(
                 iconName: widget.playListIcon,
-                playListName: widget.playListName,
+                playListName: widget.playList['name'],
                 iconColor: widget.iconColor,
               ),
               Divider(),
@@ -127,30 +129,19 @@ class PlayListName extends StatelessWidget {
   }
 }
 
-// song play list
-class PlayList extends StatefulWidget {
-  PlayList({Key key}) : super(key: key);
-
-  @override
-  _PlayListState createState() => _PlayListState();
-}
-
-class _PlayListState extends State<PlayList> {
+class PlayList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print("OpenDb-lenght : ${OpenDb.currentSongList}");
     return Expanded(
         child: Container(
-      child: OpenDb.currentSongList.length == null
-          ? Center(
-              child: Text("no songs"),
-            )
+      color: Colors.transparent,
+      child: OpenDb.currentSongList == null
+          ? Text("no data")
           : ListView.builder(
               itemCount: OpenDb.currentSongList.length,
               itemBuilder: (BuildContext context, idx) {
-                return SongCard(
-                  song: OpenDb.currentSongList[idx],
-                );
+                print("song builder---");
+                return SongCard(song: OpenDb.currentSongList[idx], idx: idx);
               },
             ),
     ));
@@ -160,15 +151,18 @@ class _PlayListState extends State<PlayList> {
 // song card
 class SongCard extends StatelessWidget {
   final Map<String, dynamic> song;
+  final int idx;
 
-  const SongCard({Key key, this.song}) : super(key: key);
+  const SongCard({Key key, this.song, this.idx}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.music_note),
       title: Text(song['track'].toString()),
       subtitle: Text(song['artist'].toString()),
-      onTap: () {},
+      onTap: () {
+        print("onTap");
+      },
     );
   }
 }

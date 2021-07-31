@@ -4,6 +4,7 @@ import 'package:music_player/models/dataModel.dart';
 import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
+import 'package:music_player/widgets/dialogBox.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 
 _TrackListState trackListState;
@@ -44,7 +45,6 @@ class _AllSongScreenState extends State<AllSongScreen> {
                 iconColor: Colors.deepPurple,
               ),
               AllSongs(),
-              // BottomPlayerWidget()
             ],
           ),
         ),
@@ -211,7 +211,12 @@ class EditBottomSheet extends StatelessWidget {
             margin: EdgeInsets.zero,
             child: IconButton(
                 alignment: Alignment.center,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => addToPlayListDialog(context));
+                  print("pressed");
+                },
                 icon: Icon(
                   Icons.add,
                   size: 40,

@@ -36,12 +36,14 @@ class _PlayListScreenState extends State<PlayListsScreen> {
             centerTitle: true,
           ),
         ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.height,
-          decoration: myDecoration(),
-          child: Column(
-            children: <Widget>[PlayListsWidget(), BottomPlayerWidget()],
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.height,
+            decoration: myDecoration(),
+            child: Column(
+              children: <Widget>[PlayListsWidget(), BottomPlayerWidget()],
+            ),
           ),
         ),
       ),
