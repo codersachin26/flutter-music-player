@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
@@ -35,6 +36,8 @@ class _SongsListScreenState extends State<SongsListScreen> {
 
   void getSongs() async {
     OpenDb.currentSongList = await getTracks(OpenDb.db, playList['tablename']);
+    // var songs = await getPlayListTracks(OpenDb.db, playList['tablename']);
+    // print("playList['tablename']----> $songs");
   }
 
   @override
@@ -150,7 +153,7 @@ class PlayList extends StatelessWidget {
 
 // song card
 class SongCard extends StatelessWidget {
-  final Map<String, dynamic> song;
+  final SongInfo song;
   final int idx;
 
   const SongCard({Key key, this.song, this.idx}) : super(key: key);
@@ -158,8 +161,8 @@ class SongCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.music_note),
-      title: Text(song['track'].toString()),
-      subtitle: Text(song['artist'].toString()),
+      title: Text(song.title),
+      subtitle: Text(song.artist),
       onTap: () {
         print("onTap");
       },

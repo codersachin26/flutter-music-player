@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/models/PlayerStateModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,10 +10,12 @@ class OpenDb {
   static Database db;
   static List<int> pickedSong = [];
   static List<SongInfo> allSongs;
-  static List<Map<String, dynamic>> currentSongList;
+  static List<dynamic> currentSongList;
   static List<Map<String, dynamic>> playlists;
+  static MusicPlayer musicPlayer;
   static void openDB() async {
     db = await getdb();
+    OpenDb.musicPlayer = MusicPlayer();
     playlists = await getPlayLists(db);
     OpenDb.currentSongList = await getTracks(OpenDb.db, "Favorites");
   }
@@ -28,9 +31,9 @@ Future<Database> getdb() async {
       'CREATE TABLE playlist(name TEXT,tablename TEXT)',
     );
     db.execute(
-      'CREATE TABLE favorites(track TEXT, artist TEXT,url TEXT)',
+      'CREATE TABLE favorites(id TEXT)',
     );
-    db.insert("playlist", {'name': 'favorites', 'tablename': 'favorites'});
+    // db.insert("playlist", {'name': 'favorites', 'tablename': 'favorites'});
   }, version: 1);
 
   return db;
@@ -41,29 +44,37 @@ void createPlayList(Database db, String playlistname) async {
   final tableName = playlistname.replaceAll(" ", "").toLowerCase();
   Map<String, String> values = {'name': playlistname, 'tablename': tableName};
   print("Map----> $values");
-  await db.execute('CREATE TABLE $tableName(track TEXT, artist TEXT,url TEXT)');
+  await db.execute('CREATE TABLE $tableName(id TEXT)');
   final id = await db.insert('playlist', values);
   print("ID : $id");
 }
 
 // insert track data into playlist
-Future<void> insertTrack(
-    Database db, String playlistname, SongInfo song) async {
-  Map<String, String> values = {
-    'track': song.title,
-    'artist': song.artist,
-    'url': song.uri,
-  };
-  await db.insert(playlistname, values,
-      conflictAlgorithm: ConflictAlgorithm.replace);
-}
+// Future<void> insertTrack(
+//     Database db, String playlistname, SongInfo song) async {
+//   Map<String, String> values = {
+//     'id': song.id,
+//     'track': song.title,
+//     'artist': song.artist,
+//     'url': song.uri,
+//   };
+//   await db.insert(playlistname, values,
+//       conflictAlgorithm: ConflictAlgorithm.replace);
+// }
 
 // get all playlist tracks
-Future<List<Map<String, dynamic>>> getTracks(
-    Database db, String tablename) async {
+Future<List<dynamic>> getTracks(Database db, String tablename) async {
+  final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
   print("getTracks : $tablename");
-  List<Map<String, dynamic>> songs = await db.query(tablename);
-  // print("await : $songs");
+  List<Map<String, dynamic>> queryData = await db.query(tablename);
+  List<String> ids = <String>[];
+  queryData.forEach((songId) {
+    ids.add(songId['id'].toString());
+  });
+  print("Ids---> $ids");
+  var songs = await audioQuery.getSongsById(ids: ids);
+  // print("lenth----> ${ss[0]}");
+
   return songs;
 }
 
@@ -83,22 +94,25 @@ void removePlayList(Database db, Map<String, dynamic> playlist) async {
 Future<List<Map<String, dynamic>>> getPlayLists(Database db) async {
   List<Map<String, dynamic>> playlist;
   playlist = await db.query("playlist");
-  // print("playlist : $playlist");
+  print("playlist-----> : $playlist");
   return playlist;
 }
 
-void updatePlayList() async {
-  OpenDb.playlists = await getPlayLists(OpenDb.db);
-}
+// void updatePlayList() async {
+//   OpenDb.playlists = await getPlayLists(OpenDb.db);
+// }
 
 void insertSongstoPlaylist(String tableName) async {
   Batch batch = OpenDb.db.batch();
   List<int> songs = OpenDb.pickedSong;
+  // print("Yes Ids------> ${OpenDb.allSongs[idx].id.toString()}");
   songs.forEach((idx) {
+    print("Yes Ids------> ${OpenDb.allSongs[idx].id.toString()}");
     batch.insert(tableName, {
-      'track': OpenDb.allSongs[idx].title.toString(),
-      'artist': OpenDb.allSongs[idx].artist.toString(),
-      'url': OpenDb.allSongs[idx].uri.toString()
+      'id': OpenDb.allSongs[idx].id.toString(),
+      // 'track': OpenDb.allSongs[idx].title.toString(),
+      // 'artist': OpenDb.allSongs[idx].artist.toString(),
+      // 'url': OpenDb.allSongs[idx].uri.toString()
     });
   });
   await batch.commit(noResult: true);

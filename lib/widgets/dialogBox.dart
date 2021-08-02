@@ -42,7 +42,12 @@ newPlaylistDialogBox(BuildContext context) {
                       createPlayList(OpenDb.db, playlistname);
                       // updatePlayList();
                       print("object 1 : ${OpenDb.playlists}");
-                      Map<String, dynamic> newPlayList = {'name': playlistname};
+                      final tableName =
+                          playlistname.replaceAll(" ", "").toLowerCase();
+                      Map<String, dynamic> newPlayList = {
+                        'name': playlistname,
+                        'tablename': tableName
+                      };
                       List<Map<String, dynamic>> newplaylists =
                           List.from(OpenDb.playlists);
                       newplaylists.add(newPlayList);

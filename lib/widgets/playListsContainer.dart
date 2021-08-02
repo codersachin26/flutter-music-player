@@ -92,7 +92,7 @@ class PlayListView extends StatelessWidget {
                       removePlayListDialog(context, listname));
             }),
         onTap: () {
-          print("onpress : ---- $listname");
+          print("onpressListName : ------> $listname");
           Navigator.push(
               context,
               MaterialPageRoute(

@@ -29,7 +29,7 @@ class _AllSongScreenState extends State<AllSongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("455 : ${Name.name}");
+    // print("455 : ${Name.name}");
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -135,7 +135,7 @@ class SongsCard extends StatelessWidget {
               )
             : null,
         onTap: () {
-          isEdit ? selectSong(idx) : null;
+          isEdit ? selectSong(idx) : OpenDb.musicPlayer.play(song.uri);
           print("object: ${OpenDb.pickedSong} ");
           trackListState.setState(() {});
         });
