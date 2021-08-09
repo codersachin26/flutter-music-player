@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/dialogBox.dart';
+import 'package:provider/provider.dart';
 
 _PlayListContainerState playListContainerState;
 
@@ -15,6 +19,16 @@ class PlayListContainer extends StatefulWidget {
 }
 
 class _PlayListContainerState extends State<PlayListContainer> {
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {});
+      print("mytimer------");
+      timer.cancel();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print("playlistcontainer----");

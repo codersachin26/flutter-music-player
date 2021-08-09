@@ -1,17 +1,21 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/utils/db.dart';
 
 class MusicPlayer {
-  bool isplaying;
-  List<SongInfo> currentSongList;
-  int idx;
+  bool isplaying = false;
+  List<SongInfo> currentSongList = OpenDb.allSongs;
+  int idx = 0;
+  String songLengh = "0:0";
+  double audioTotalDuration = 0.0;
   AudioPlayer audioPlayer = AudioPlayer();
 
   void play(String url) async {
-    await audioPlayer.play(url);
+    await audioPlayer.play(url).then((value) => this.setAudioLen());
+    // setAudioLen();
   }
 
-  void pouseSong() {
+  void pouse() {
     audioPlayer.pause();
   }
 
@@ -20,9 +24,11 @@ class MusicPlayer {
       this.play(url);
       this.isplaying = true;
       this.idx = idx;
+      this.currentSongList = OpenDb.currentSongList;
+      // this.setAudioLen();
     } else {
       this.isplaying = false;
-      this.pouseSong();
+      this.pouse();
     }
   }
 
@@ -31,6 +37,7 @@ class MusicPlayer {
     play(url);
     this.idx = this.idx + 1;
     this.isplaying = true;
+    print("nestSongTap--->");
   }
 
   void preSong() {
@@ -38,5 +45,20 @@ class MusicPlayer {
     play(url);
     this.idx = this.idx - 1;
     this.isplaying = true;
+    print("preSongTap--->");
+  }
+
+  void rePlay() {
+    this.audioPlayer.resume();
+  }
+
+  void setAudioLen() async {
+    int audioDuration = await this.audioPlayer.getDuration();
+    print("int Duration------->$audioDuration");
+    this.audioTotalDuration = audioDuration / 60;
+    Duration len = Duration(milliseconds: audioDuration);
+    this.songLengh = "${len.inMinutes}:${len.inSeconds % 60}";
+    print("Mitnues --->>>> ${len.inMinutes}");
+    print("Seconds --->>>> ${len.inSeconds % 60}");
   }
 }

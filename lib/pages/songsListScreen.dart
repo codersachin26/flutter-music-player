@@ -164,6 +164,7 @@ class SongCard extends StatelessWidget {
       title: Text(song.title),
       subtitle: Text(song.artist),
       onTap: () {
+        OpenDb.musicPlayer.playOrpouse(song.uri, idx);
         print("onTap");
       },
     );

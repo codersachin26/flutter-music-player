@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListsContainer.dart';
 import 'package:music_player/widgets/songListCart.dart';

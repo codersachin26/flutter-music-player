@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/models/musicStateModel.dart';
+import 'package:music_player/pages/PlayerScreen.dart';
+import 'package:provider/provider.dart';
 
-class BottomPlayerWidget extends StatefulWidget {
-  @override
-  _BottomPlayerWidgetState createState() => _BottomPlayerWidgetState();
-}
-
-class _BottomPlayerWidgetState extends State<BottomPlayerWidget> {
+class BottomPlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -25,13 +24,23 @@ class _BottomPlayerWidgetState extends State<BottomPlayerWidget> {
               )
             ],
           ),
+
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: Colors.blueGrey[900],
           ),
         ),
         onTap: () {
-          Navigator.pushNamed(context, '/player');
+          final MusicStateModel model =
+              Provider.of<MusicStateModel>(context, listen: false);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ListenableProvider<MusicStateModel>.value(
+                        value: model,
+                        child: MusicPlayer(),
+                      )));
         });
   }
 }
@@ -53,46 +62,73 @@ class SongArt extends StatelessWidget {
 
 //song title widget
 class SongTitle extends StatelessWidget {
+  SongInfo getCurrentSong(BuildContext context) {
+    // Provider.of<MusicStateModel>(context, listen: false)
+    //     .setCurrentSongList(OpenDb.allSongs);
+    return Provider.of<MusicStateModel>(context, listen: false).getSong;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            "music_Song",
-            style: TextStyle(fontSize: 17, color: Colors.white),
-          ),
-          Text(
-            "Yo Yo",
-            style: TextStyle(fontSize: 10, color: Colors.white30),
-          )
-        ],
-      ),
-    );
+    SongInfo song = getCurrentSong(context);
+    print("MY-song:  ----> $song");
+    return Consumer<MusicStateModel>(
+        builder: (context, model, _) => Container(
+              child: Column(
+                children: [
+                  Text(
+                    model.getSong != null
+                        ? model.getSong.title.substring(
+                            0,
+                            model.getSong.title.length > 26
+                                ? 26
+                                : model.getSong?.title?.length)
+                        : "no song",
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                  Text(
+                    model.getSong != null
+                        ? model.getSong.artist.substring(
+                            0,
+                            model.getSong.artist.length > 13
+                                ? 13
+                                : model.getSong?.artist?.length)
+                        : "no artits",
+                    style: TextStyle(fontSize: 10, color: Colors.white30),
+                  )
+                ],
+              ),
+            ));
   }
 }
 
-//play or puase btn widget
-class PlayorPauseIcon extends StatefulWidget {
-  @override
-  _PlayorPauseIconState createState() => _PlayorPauseIconState();
-}
-
-class _PlayorPauseIconState extends State<PlayorPauseIcon> {
-  bool isplay = false;
+class PlayorPauseIcon extends StatelessWidget {
+  bool getPlayingState(BuildContext context) {
+    return Provider.of<MusicStateModel>(context, listen: false).playing;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: isplay
-          ? Icon(
-              Icons.pause,
-              size: 40,
-            )
-          : Icon(
-              Icons.play_arrow,
-              size: 40,
-            ),
+    void _onPressed() {
+      Provider.of<MusicStateModel>(context, listen: false).resume();
+    }
+
+    return Consumer<MusicStateModel>(
+      builder: (context, player, _) => Container(
+        child: player.playing
+            ? IconButton(
+                onPressed: _onPressed,
+                icon: Icon(
+                  Icons.pause,
+                  size: 40,
+                ))
+            : IconButton(
+                onPressed: _onPressed,
+                icon: Icon(
+                  Icons.play_arrow,
+                  size: 40,
+                )),
+      ),
     );
   }
 }

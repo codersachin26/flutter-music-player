@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/widgets/musicArtContainer.dart';
 import 'package:music_player/widgets/myDecoration.dart';

@@ -18,7 +18,14 @@ class OpenDb {
     OpenDb.musicPlayer = MusicPlayer();
     playlists = await getPlayLists(db);
     OpenDb.currentSongList = await getTracks(OpenDb.db, "Favorites");
+    getAllSongs();
   }
+}
+
+// get all songs
+void getAllSongs() async {
+  final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
+  OpenDb.allSongs = await audioQuery.getSongs();
 }
 
 // create database

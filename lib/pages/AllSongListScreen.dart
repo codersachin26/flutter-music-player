@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:music_player/models/dataModel.dart';
+import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/pages/songsListScreen.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/dialogBox.dart';
 import 'package:music_player/widgets/myDecoration.dart';
+import 'package:provider/provider.dart';
 
 _TrackListState trackListState;
 _AllSongsState allSongsState;
@@ -19,17 +20,16 @@ class _AllSongScreenState extends State<AllSongScreen> {
   @override
   void initState() {
     super.initState();
-    getAllSongs();
+    // getAllSongs();
   }
 
-  void getAllSongs() async {
-    final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
-    OpenDb.allSongs = await audioQuery.getSongs();
-  }
+  // void getAllSongs() async {
+  //   final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
+  //   OpenDb.allSongs = await audioQuery.getSongs();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // print("455 : ${Name.name}");
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -135,8 +135,12 @@ class SongsCard extends StatelessWidget {
               )
             : null,
         onTap: () {
-          isEdit ? selectSong(idx) : OpenDb.musicPlayer.play(song.uri);
-          print("object: ${OpenDb.pickedSong} ");
+          print("pp --> ");
+          isEdit
+              ? selectSong(idx)
+              : Provider.of<MusicStateModel>(context, listen: false)
+                  .playOrpouse(idx, OpenDb.allSongs);
+          print("OpenDb.pickedSong--> : ${OpenDb.pickedSong} ");
           trackListState.setState(() {});
         });
   }

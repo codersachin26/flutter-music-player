@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListWidgets.dart';
+import 'package:provider/provider.dart';
 
 class PlayListsScreen extends StatefulWidget {
   const PlayListsScreen({Key key}) : super(key: key);
@@ -36,13 +38,16 @@ class _PlayListScreenState extends State<PlayListsScreen> {
             centerTitle: true,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.height,
-            decoration: myDecoration(),
-            child: Column(
-              children: <Widget>[PlayListsWidget(), BottomPlayerWidget()],
+        body: ChangeNotifierProvider(
+          create: (context) => MusicStateModel(),
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.height,
+              decoration: myDecoration(),
+              child: Column(
+                children: <Widget>[PlayListsWidget(), BottomPlayerWidget()],
+              ),
             ),
           ),
         ),
