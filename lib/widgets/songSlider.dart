@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/models/musicStateModel.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:provider/provider.dart';
 
 class SongSlider extends StatefulWidget {
@@ -17,23 +16,33 @@ class _SongSliderState extends State<SongSlider> {
     return Container(
         child: Column(
       children: [
-        Slider(
-            value: myvalue,
-            min: 0.0,
-            max: Provider.of<MusicStateModel>(context, listen: false).songLen,
-            onChanged: (value) {
-              setState(() {
-                myvalue = value;
-              });
-              print(value);
-            }),
+        Consumer<MusicStateModel>(
+          builder: (context, model, _) => Slider(
+              value: model.curPosition.toDouble(),
+              min: 0.0,
+              max: Provider.of<MusicStateModel>(context, listen: false)
+                  .songLen
+                  .toDouble(),
+              onChanged: (newValue) {
+                setState(() {
+                  model.parseDuration(newValue.toInt());
+                  setState(() {
+                    model.setOnChangePos(newValue.toInt());
+                  });
+                });
+                print(newValue);
+              },
+              onChangeEnd: (endValue) {
+                model.seekTo(endValue.toInt());
+              }),
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Provider.of<MusicStateModel>(context, listen: false)
-                  .curentPos),
+              Consumer<MusicStateModel>(
+                  builder: (context, model, _) => Text(model.getAudioPos)),
               Text(Provider.of<MusicStateModel>(context, listen: false)
                   .getSongDuration)
             ],
