@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/models/PlayerStateModel.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/models/playListModel.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,19 +10,19 @@ import 'package:sqflite/sqflite.dart';
 // setup sqflite database
 class OpenDb {
   static Database db;
-  static List<int> pickedSong = [];
+  static List<int> pickedSongIdx = [];
   static List<SongInfo> allSongs;
-  static List<dynamic> currentSongList;
+  // static List<dynamic> currentSongList;
   static List<Map<String, dynamic>> playlists;
-  static MusicPlayer musicPlayer;
-  static List<Map<String, MyPlayList>> myPlayLists;
+  // static MusicPlayer musicPlayer;
+  static AllPlayList allPlayList;
   static void openDB() async {
     db = await getdb();
-    OpenDb.musicPlayer = MusicPlayer();
+    // OpenDb.musicPlayer = MusicPlayer();
     playlists = await getPlayLists(db);
-    OpenDb.currentSongList = await getTracks(OpenDb.db, "Favorites");
+    // OpenDb.currentSongList = await getTracks(OpenDb.db, "Favorites");
     getAllSongs();
-    OpenDb.myPlayLists = getMyPlayLists();
+    OpenDb.allPlayList = getMyPlayLists();
   }
 }
 
@@ -49,7 +50,7 @@ Future<Database> getdb() async {
 }
 
 // create new playlist table
-void createPlayList(String listName) async {
+void createPlayListIntoDB(String listName) async {
   Map<String, String> values = {
     'name': listName,
   };
@@ -60,20 +61,19 @@ void createPlayList(String listName) async {
 }
 
 // get all playlist tracks
-Future<List<dynamic>> getTracks(Database db, String tablename) async {
-  final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
-  print("getTracks : $tablename");
-  List<Map<String, dynamic>> queryData = await db.query(tablename);
-  List<String> ids = <String>[];
-  queryData.forEach((songId) {
-    ids.add(songId['id'].toString());
-  });
-  print("Ids---> $ids");
-  var songs = await audioQuery.getSongsById(ids: ids);
-  // print("lenth----> ${ss[0]}");
+// Future<List<dynamic>> getTracks(Database db, String tablename) async {
+//   final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
+//   print("getTracks : $tablename");
+//   List<Map<String, dynamic>> queryData = await db.query(tablename);
+//   List<String> ids = <String>[];
+//   queryData.forEach((songId) {
+//     ids.add(songId['id'].toString());
+//   });
+//   print("Ids---> $ids");
+//   var songs = await audioQuery.getSongsById(ids: ids);
 
-  return songs;
-}
+//   return songs;
+// }
 
 // remove track from playlist
 Future<void> removeTrack(String playListName, String songId) async {
@@ -82,7 +82,7 @@ Future<void> removeTrack(String playListName, String songId) async {
 }
 
 // remove music playlist from playlist table
-void removePlayList(String name) async {
+void removePlayListFromDB(String name) async {
   final tableName = name.replaceAll(" ", "").toLowerCase();
   await OpenDb.db.rawQuery('DROP TABLE $tableName');
   await OpenDb.db.rawDelete('DELETE FROM playlist WHERE name = ?', [name]);
@@ -92,11 +92,11 @@ void removePlayList(String name) async {
 Future<List<Map<String, dynamic>>> getPlayLists(Database db) async {
   List<Map<String, dynamic>> playlist;
   playlist = await db.query("playlist");
-  print("playlist-----> : $playlist");
   return playlist;
 }
 
-void insertSongstoPlaylist(String name, List<String> songids) async {
+// insert songs into playlist table
+void insertSongstoPlaylistDB(String name, List<String> songids) async {
   final tableName = name.replaceAll(" ", "").toLowerCase();
   Batch batch = OpenDb.db.batch();
   songids.forEach((id) {
@@ -108,16 +108,16 @@ void insertSongstoPlaylist(String name, List<String> songids) async {
 }
 
 void selectSong(int idx) {
-  if (OpenDb.pickedSong.contains(idx)) {
-    OpenDb.pickedSong.remove(idx);
+  if (OpenDb.pickedSongIdx.contains(idx)) {
+    OpenDb.pickedSongIdx.remove(idx);
   } else {
-    OpenDb.pickedSong.add(idx);
+    OpenDb.pickedSongIdx.add(idx);
   }
 }
 
-List<Map<String, MyPlayList>> getMyPlayLists() {
+AllPlayList getMyPlayLists() {
   final playlists = OpenDb.playlists;
-  List<Map<String, MyPlayList>> myPlayList;
+  AllPlayList allPlayList;
   playlists.forEach((playlist) async {
     List<Map<String, dynamic>> queryData =
         await OpenDb.db.query(playlist['tablename']);
@@ -125,7 +125,7 @@ List<Map<String, MyPlayList>> getMyPlayLists() {
     queryData.forEach((songId) {
       ids.add(songId['id'].toString());
     });
-    myPlayList.add({playlist['name']: MyPlayList(playlist['name'], ids)});
+    allPlayList.addPlaylist(playlist['name'], ids);
   });
-  return myPlayList;
+  return allPlayList;
 }

@@ -4,7 +4,7 @@ import 'package:music_player/utils/db.dart';
 
 class MusicPlayer {
   bool isplaying = false;
-  List<SongInfo> currentSongList = OpenDb.allSongs;
+  List<SongInfo> currentPlayList = OpenDb.allSongs;
   int idx = 0;
   String songLengh = "0:0";
   double audioTotalDuration = 0.0;
@@ -19,13 +19,12 @@ class MusicPlayer {
     audioPlayer.pause();
   }
 
-  void playOrpouse(String url, int idx) {
-    if (!this.isplaying || this.currentSongList[idx].uri != url) {
+  void playOrpouse(String url, int idx, List<SongInfo> playList) {
+    if (!this.isplaying || this.currentPlayList[idx].uri != url) {
       this.play(url);
       this.isplaying = true;
       this.idx = idx;
-      this.currentSongList = OpenDb.currentSongList;
-      // this.setAudioLen();
+      this.currentPlayList = playList;
     } else {
       this.isplaying = false;
       this.pouse();
@@ -33,7 +32,7 @@ class MusicPlayer {
   }
 
   void nextSong() {
-    final String url = this.currentSongList[this.idx + 1].uri;
+    final String url = this.currentPlayList[this.idx + 1].uri;
     play(url);
     this.idx = this.idx + 1;
     this.isplaying = true;
@@ -41,7 +40,7 @@ class MusicPlayer {
   }
 
   void preSong() {
-    final String url = this.currentSongList[this.idx - 1].uri;
+    final String url = this.currentPlayList[this.idx - 1].uri;
     play(url);
     this.idx = this.idx - 1;
     this.isplaying = true;

@@ -42,7 +42,6 @@ class SongListCard extends StatelessWidget {
         final MusicStateModel model =
             Provider.of<MusicStateModel>(context, listen: false);
         if (playlist['name'] == 'All Songs') {
-          // Navigator.pushNamed(context, '/allSongs');
           Navigator.push(
               context,
               MaterialPageRoute(

@@ -106,14 +106,19 @@ class PlayListView extends StatelessWidget {
                       removePlayListDialog(context, listname));
             }),
         onTap: () {
-          print("onpressListName : ------> $listname");
+          final MusicStateModel model =
+              Provider.of<MusicStateModel>(context, listen: false);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SongsListScreen(
-                        playList: listname,
-                        playListIcon: null,
-                        iconColor: null,
+                  builder: (context) =>
+                      ListenableProvider<MusicStateModel>.value(
+                        value: model,
+                        child: SongsListScreen(
+                          playList: listname,
+                          playListIcon: null,
+                          iconColor: null,
+                        ),
                       )));
         },
       ),

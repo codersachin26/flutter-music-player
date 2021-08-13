@@ -38,22 +38,7 @@ newPlaylistDialogBox(BuildContext context) {
                     )),
                 TextButton(
                     onPressed: () {
-                      // Navigator.of(context).pop();
-                      createPlayList(OpenDb.db, playlistname);
-                      // updatePlayList();
-                      print("object 1 : ${OpenDb.playlists}");
-                      final tableName =
-                          playlistname.replaceAll(" ", "").toLowerCase();
-                      Map<String, dynamic> newPlayList = {
-                        'name': playlistname,
-                        'tablename': tableName
-                      };
-                      List<Map<String, dynamic>> newplaylists =
-                          List.from(OpenDb.playlists);
-                      newplaylists.add(newPlayList);
-                      print("newplaylists : $newplaylists");
-                      OpenDb.playlists = newplaylists;
-                      print("OpenDb.playlists : ${OpenDb.playlists}");
+                      OpenDb.allPlayList.addPlaylist(playlistname);
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -104,15 +89,7 @@ removePlayListDialog(BuildContext context, Map<String, dynamic> playlist) {
                     )),
                 TextButton(
                     onPressed: () {
-                      List<Map<String, dynamic>> newplaylists =
-                          List.from(OpenDb.playlists);
-                      print("object2 : $newplaylists");
-                      // newplaylists.remove(playlist);
-                      newplaylists.removeWhere(
-                          (item) => item['name'] == playlist['name']);
-                      print("object3 : $newplaylists");
-                      OpenDb.playlists = newplaylists;
-                      removePlayList(OpenDb.db, playlist);
+                      OpenDb.allPlayList.removePlayList(playlist['name']);
                       playListContainerState.setState(() {});
                       Navigator.of(context).pop();
                     },

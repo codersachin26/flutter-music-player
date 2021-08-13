@@ -10,18 +10,23 @@ class MyPlayList {
   // get playlist name
   String get name => this._name;
 
+  // get track counts
+  int count() {
+    return this._ids.length;
+  }
+
   Future<List<SongInfo>> getSongs() async {
     FlutterAudioQuery audioQuery = FlutterAudioQuery();
     return await audioQuery.getSongsById(ids: this._ids);
   }
 
-  void addsongs(List<String> ids) {
+  void addsongs(List<int> index) {
     List<String> songIds;
-    ids.forEach((id) {
-      songIds.add(id);
+    index.forEach((i) {
+      songIds.add(OpenDb.allSongs[i].id);
     });
     this._ids.addAll(songIds);
-    insertSongstoPlaylist(this._name, songIds);
+    insertSongstoPlaylistDB(this._name, songIds);
   }
 
   void removeSong(String id) {

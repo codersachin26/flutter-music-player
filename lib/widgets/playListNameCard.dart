@@ -15,7 +15,9 @@ class PlayListNamebtn extends StatelessWidget {
       leading: Icon(Icons.playlist_add),
       title: Text(playlist['name']),
       onTap: () {
-        insertSongstoPlaylist(playlist['tablename']);
+        final myPlayList =
+            OpenDb.allPlayList.getPlayListByName(playlist['name']);
+        myPlayList.addsongs(OpenDb.pickedSongIdx);
         allSongsState.setState(() {
           allSongsState.isEdit = !allSongsState.isEdit;
         });

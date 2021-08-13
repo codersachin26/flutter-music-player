@@ -6,6 +6,7 @@ import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/dialogBox.dart';
 import 'package:music_player/widgets/myDecoration.dart';
+import 'package:music_player/widgets/playListHeaderContainer.dart';
 import 'package:provider/provider.dart';
 
 _TrackListState trackListState;
@@ -39,7 +40,7 @@ class _AllSongScreenState extends State<AllSongScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              PlayListName(
+              PlayListHeaderContainer(
                 iconName: Icons.music_note,
                 playListName: "All Songs",
                 iconColor: Colors.deepPurple,
@@ -74,7 +75,7 @@ class _AllSongsState extends State<AllSongs> {
                 onPressed: () {
                   setState(() {
                     isEdit = !isEdit;
-                    OpenDb.pickedSong = [];
+                    OpenDb.pickedSongIdx = [];
                   });
                 },
                 child: isEdit ? Text("Cancel") : Text("Edit")),
@@ -135,12 +136,10 @@ class SongsCard extends StatelessWidget {
               )
             : null,
         onTap: () {
-          print("pp --> ");
           isEdit
               ? selectSong(idx)
               : Provider.of<MusicStateModel>(context, listen: false)
                   .playOrpouse(idx, OpenDb.allSongs);
-          print("OpenDb.pickedSong--> : ${OpenDb.pickedSong} ");
           trackListState.setState(() {});
         });
   }
@@ -152,9 +151,9 @@ class SelectBtn extends StatelessWidget {
   const SelectBtn({Key key, this.idx}) : super(key: key);
 
   Color isDone() {
-    if (!OpenDb.pickedSong.contains(idx)) {
+    if (!OpenDb.pickedSongIdx.contains(idx)) {
       print("IDX: $idx");
-      print("Contain: ${OpenDb.pickedSong.contains(idx)}");
+      print("Contain: ${OpenDb.pickedSongIdx.contains(idx)}");
       return Colors.grey;
     } else {
       return Colors.deepPurple;
@@ -193,13 +192,14 @@ class EditBottomSheet extends StatelessWidget {
             color: Colors.grey,
             child: IconButton(
                 onPressed: () {
-                  insertSongstoPlaylist("favorites");
+                  final favList =
+                      OpenDb.allPlayList.getPlayListByName("favorites");
+                  favList.addsongs(OpenDb.pickedSongIdx);
                   allSongsState.setState(() {
                     allSongsState.isEdit = !allSongsState.isEdit;
                   });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("your song added to favorites list")));
-                  print("nothing");
                 },
                 icon: Icon(
                   Icons.favorite,
