@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/pages/songsListScreen.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/dialogBox.dart';
 import 'package:provider/provider.dart';
 
@@ -22,16 +20,10 @@ class _PlayListContainerState extends State<PlayListContainer> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {});
-      print("mytimer------");
-      timer.cancel();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("playlistcontainer----");
     return Expanded(
       child: Container(
         child: Column(
@@ -45,30 +37,45 @@ class _PlayListContainerState extends State<PlayListContainer> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    // String playlistname;
+                    final AllPlayList model =
+                        Provider.of<AllPlayList>(context, listen: false);
                     showDialog(
                         context: context,
-                        builder: (BuildContext context) =>
-                            newPlaylistDialogBox(context));
+                        builder: (BuildContext context) {
+                          return newPlaylistDialogBox(context, model);
+                        });
                   },
                 )
               ],
             ),
             Expanded(
-              child: Container(
-                color: Colors.transparent,
-                child: OpenDb.playlists == null
-                    ? Text("no play")
-                    : ListView.builder(
-                        itemCount: OpenDb.playlists.length,
-                        itemBuilder: (BuildContext context, idx) {
-                          print("builder----");
-                          return PlayListView(
-                            listname: OpenDb.playlists[idx],
-                            idx: idx,
-                          );
-                        },
-                      ),
+              child: Consumer<AllPlayList>(
+                builder: (context, model, _) => FutureBuilder<List<String>>(
+                    future: model.getAllPlayListName(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<String>> snapshot) {
+                      if (snapshot.hasData) {
+                        return Container(
+                          color: Colors.transparent,
+                          child: snapshot.data.isNotEmpty
+                              ? Text("no play")
+                              : ListView.builder(
+                                  itemCount: model.getAllPlayList().length,
+                                  itemBuilder: (BuildContext context, idx) {
+                                    print(
+                                        "builderModel---->>> ${model.getAllPlayList().isNotEmpty}");
+                                    return PlayListView(
+                                      listname: model.getAllPlayList()[idx],
+                                      idx: idx,
+                                    );
+                                  },
+                                ),
+                        );
+                      }
+                      return Center(
+                        child: Text("Loding......"),
+                      );
+                    }),
               ),
             )
           ],
@@ -80,20 +87,31 @@ class _PlayListContainerState extends State<PlayListContainer> {
 
 // return a playlist
 class PlayListView extends StatelessWidget {
-  final Map<String, dynamic> listname;
+  final String listname;
   final int idx;
+  int count;
 
-  const PlayListView({Key key, this.listname, this.idx}) : super(key: key);
+  PlayListView({Key key, this.listname, this.idx}) : super(key: key);
+
+  int getSongCount(BuildContext context) {
+    final playlist = Provider.of<AllPlayList>(context, listen: false)
+        .getPlayListByName(listname);
+    return playlist.count();
+  }
+
   @override
   Widget build(BuildContext context) {
+    this.count = getSongCount(context);
+    print("ininini---===----");
     return Card(
       child: ListTile(
         tileColor: Colors.black,
         leading: Image.asset(
           "assests/music.jpg",
         ),
-        title: Text(listname['name'], style: TextStyle(color: Colors.white)),
-        subtitle: Text("26 tracks", style: TextStyle(color: Colors.white)),
+        title: Text(listname, style: TextStyle(color: Colors.white)),
+        subtitle:
+            Text(this.count.toString(), style: TextStyle(color: Colors.white)),
         trailing: IconButton(
             icon: Icon(
               Icons.delete,
@@ -115,7 +133,7 @@ class PlayListView extends StatelessWidget {
                       ListenableProvider<MusicStateModel>.value(
                         value: model,
                         child: SongsListScreen(
-                          playList: listname,
+                          playListName: listname,
                           playListIcon: null,
                           iconColor: null,
                         ),

@@ -37,11 +37,11 @@ class _SongsListScreenState extends State<SongsListScreen> {
   void initState() {
     super.initState();
     getSongs();
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {});
-      print("timer------");
-      timer.cancel();
-    });
+    // Timer.periodic(Duration(seconds: 1), (timer) {
+    //   setState(() {});
+    //   print("timer------");
+    //   timer.cancel();
+    // });
   }
 
   // void getSongs() async {
@@ -83,11 +83,16 @@ class _SongsListScreenState extends State<SongsListScreen> {
   }
 }
 
-// songslist listview
+// songslist view
 class PlayList extends StatelessWidget {
   final List<SongInfo> songs;
 
   const PlayList({Key key, this.songs}) : super(key: key);
+
+  List<SongInfo> getSongsList() {
+    return this.songs;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -98,15 +103,14 @@ class PlayList extends StatelessWidget {
           : ListView.builder(
               itemCount: songs.length,
               itemBuilder: (BuildContext context, idx) {
-                print("song builder---");
                 return ListTile(
                   leading: Icon(Icons.music_note),
                   title: Text(songs[idx].title),
                   subtitle: Text(songs[idx].artist),
                   onTap: () {
+                    final songsList = getSongsList();
                     Provider.of<MusicStateModel>(context, listen: false)
-                        .playOrpouse(idx, songs);
-                    print("onTap");
+                        .playOrpouse(idx, songsList);
                   },
                 );
               },

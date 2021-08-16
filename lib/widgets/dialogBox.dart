@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/playListNameCard.dart';
 import 'package:music_player/widgets/playListsContainer.dart';
+import 'package:provider/provider.dart';
 
-newPlaylistDialogBox(BuildContext context) {
+newPlaylistDialogBox(BuildContext context, AllPlayList model) {
   String playlistname;
+  // AllPlayList getAllPlayListModel() {
+  //   return Provider.of<AllPlayList>(context, listen: false);
+  // }
+
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     child: Container(
@@ -38,7 +44,9 @@ newPlaylistDialogBox(BuildContext context) {
                     )),
                 TextButton(
                     onPressed: () {
-                      OpenDb.allPlayList.addPlaylist(playlistname);
+                      // final model = getAllPlayListModel();
+                      print("model>>>>>>>>>>>>>>$model");
+                      model.addPlaylist(playlistname);
                       Navigator.of(context).pop();
                     },
                     child: Text(
@@ -60,7 +68,12 @@ myInputDecoration() {
   );
 }
 
-removePlayListDialog(BuildContext context, Map<String, dynamic> playlist) {
+removePlayListDialog(BuildContext context, String playlist) {
+  AllPlayList getAllPlayListModel() {
+    final model = Provider.of<AllPlayList>(context);
+    return model;
+  }
+
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     child: Container(
@@ -89,8 +102,10 @@ removePlayListDialog(BuildContext context, Map<String, dynamic> playlist) {
                     )),
                 TextButton(
                     onPressed: () {
-                      OpenDb.allPlayList.removePlayList(playlist['name']);
-                      playListContainerState.setState(() {});
+                      // OpenDb.allPlayList.removePlayList(playlist['name']);
+                      // playListContainerState.setState(() {});
+                      final model = getAllPlayListModel();
+                      model.removePlayList(playlist);
                       Navigator.of(context).pop();
                     },
                     child: Text(

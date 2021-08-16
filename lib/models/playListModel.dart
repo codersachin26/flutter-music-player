@@ -28,9 +28,4 @@ class MyPlayList {
     this._ids.addAll(songIds);
     insertSongstoPlaylistDB(this._name, songIds);
   }
-
-  void removeSong(String id) {
-    this._ids.remove(id);
-    removeTrack(this._name, id);
-  }
 }
