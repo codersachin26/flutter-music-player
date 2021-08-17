@@ -3,57 +3,29 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/models/musicStateModel.dart';
-import 'package:music_player/models/playListModel.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListHeaderContainer.dart';
 import 'package:provider/provider.dart';
 
 class SongsListScreen extends StatefulWidget {
-  final Map<String, dynamic> playList;
   final IconData playListIcon;
   final Color iconColor;
   final String playListName;
 
   const SongsListScreen(
-      {Key key,
-      this.playList,
-      this.playListIcon,
-      this.iconColor,
-      this.playListName})
+      {Key key, this.playListIcon, this.iconColor, this.playListName})
       : super(key: key);
   @override
-  _SongsListScreenState createState() => _SongsListScreenState(playList);
+  _SongsListScreenState createState() => _SongsListScreenState();
 }
 
 class _SongsListScreenState extends State<SongsListScreen> {
-  final Map<String, dynamic> playList;
   List<SongInfo> songs;
-
-  _SongsListScreenState(this.playList);
 
   @override
   void initState() {
     super.initState();
-    getSongs();
-    // Timer.periodic(Duration(seconds: 1), (timer) {
-    //   setState(() {});
-    //   print("timer------");
-    //   timer.cancel();
-    // });
-  }
-
-  // void getSongs() async {
-  //   OpenDb.currentSongList = await getTracks(OpenDb.db, playList['tablename']);
-  //   // var songs = await getPlayListTracks(OpenDb.db, playList['tablename']);
-  //   // print("playList['tablename']----> $songs");
-  // }
-
-  void getSongs() async {
-    final MyPlayList playList =
-        OpenDb.allPlayList.getPlayListByName(widget.playListName);
-    songs = await playList.getSongs();
   }
 
   @override
@@ -69,7 +41,7 @@ class _SongsListScreenState extends State<SongsListScreen> {
             children: [
               PlayListHeaderContainer(
                 iconName: widget.playListIcon,
-                playListName: widget.playList['name'],
+                playListName: widget.playListName,
                 iconColor: widget.iconColor,
               ),
               Divider(),

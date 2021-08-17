@@ -57,19 +57,15 @@ class _PlayListContainerState extends State<PlayListContainer> {
                       if (snapshot.hasData) {
                         return Container(
                           color: Colors.transparent,
-                          child: snapshot.data.isNotEmpty
-                              ? Text("no play")
-                              : ListView.builder(
-                                  itemCount: model.getAllPlayList().length,
-                                  itemBuilder: (BuildContext context, idx) {
-                                    print(
-                                        "builderModel---->>> ${model.getAllPlayList().isNotEmpty}");
-                                    return PlayListView(
-                                      listname: model.getAllPlayList()[idx],
-                                      idx: idx,
-                                    );
-                                  },
-                                ),
+                          child: ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (BuildContext context, idx) {
+                              return PlayListView(
+                                listname: snapshot.data[idx],
+                                idx: idx,
+                              );
+                            },
+                          ),
                         );
                       }
                       return Center(
@@ -89,7 +85,7 @@ class _PlayListContainerState extends State<PlayListContainer> {
 class PlayListView extends StatelessWidget {
   final String listname;
   final int idx;
-  int count;
+  // int count;
 
   PlayListView({Key key, this.listname, this.idx}) : super(key: key);
 
@@ -101,7 +97,7 @@ class PlayListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    this.count = getSongCount(context);
+    // this.count = getSongCount(context);
     print("ininini---===----");
     return Card(
       child: ListTile(
@@ -110,8 +106,7 @@ class PlayListView extends StatelessWidget {
           "assests/music.jpg",
         ),
         title: Text(listname, style: TextStyle(color: Colors.white)),
-        subtitle:
-            Text(this.count.toString(), style: TextStyle(color: Colors.white)),
+        subtitle: Text("26", style: TextStyle(color: Colors.white)),
         trailing: IconButton(
             icon: Icon(
               Icons.delete,

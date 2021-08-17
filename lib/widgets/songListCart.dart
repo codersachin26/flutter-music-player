@@ -51,13 +51,19 @@ class SongListCard extends StatelessWidget {
                         child: AllSongScreen(),
                       )));
         } else {
+          final MusicStateModel model =
+              Provider.of<MusicStateModel>(context, listen: false);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SongsListScreen(
-                        playList: playlist,
-                        playListIcon: listIcon,
-                        iconColor: iconColor,
+                  builder: (context) =>
+                      ListenableProvider<MusicStateModel>.value(
+                        value: model,
+                        child: SongsListScreen(
+                          playListName: playlist['name'],
+                          playListIcon: listIcon,
+                          iconColor: iconColor,
+                        ),
                       )));
         }
       },

@@ -20,7 +20,7 @@ class _PlayListScreenState extends State<PlayListsScreen> {
   @override
   void initState() {
     super.initState();
-    MusicDB.openDbConnection();
+    // MusicDB.openDbConnection();
     getAllSongs();
   }
 

@@ -7,10 +7,9 @@ class MusicDB {
   static Database dbConnection;
 
   // open database connection
-  static void openDbConnection() async {
+  static Future openDbConnection() async {
     WidgetsFlutterBinding.ensureInitialized();
     final String dbpath = join(await getDatabasesPath(), "music_lite.db");
-    print("DB : $dbpath");
     final dbCon = await openDatabase(dbpath, onCreate: (db, virsion) {
       db.execute(
         'CREATE TABLE playlist(name TEXT)',
@@ -21,6 +20,7 @@ class MusicDB {
     }, version: 1);
 
     MusicDB.dbConnection = dbCon;
+    print("DB : $dbConnection");
   }
 
 // create new playlist table in database

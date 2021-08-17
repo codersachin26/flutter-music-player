@@ -4,18 +4,18 @@ import 'package:music_player/utils/Db_services.dart';
 
 class AllPlayList extends ChangeNotifier {
   Map<String, MyPlayList> _allPlayList = Map<String, MyPlayList>();
+  List<String> _allPlayListName = [];
   MusicDB musicDB = MusicDB();
 
   void addPlaylist(String listName, [List<String> ids]) {
     this._allPlayList[listName] = MyPlayList(listName, ids);
+    this._allPlayListName.add(listName);
     musicDB.createPlayListInDB(listName);
     notifyListeners();
   }
 
   List<String> getAllPlayList() {
-    print("this._allPlayList.keys-----> ${this._allPlayList}");
     final playlist = this._allPlayList.keys.toList();
-
     if (this._allPlayList.isNotEmpty) {
       return playlist;
     }
@@ -34,11 +34,18 @@ class AllPlayList extends ChangeNotifier {
   }
 
   Future<List<String>> getAllPlayListName() async {
-    final playLists = await musicDB.getPlayListsFromDB();
-    List<String> playListName;
-    playLists.forEach((playList) {
-      playListName.add(playList['name']);
-    });
-    return playListName;
+    if (this._allPlayListName.isEmpty) {
+      return MusicDB.openDbConnection().then((value) async {
+        final playLists = await musicDB.getPlayListsFromDB();
+        print(playLists);
+        playLists.forEach((playList) {
+          this._allPlayListName.add(playList['name']);
+        });
+        return this._allPlayListName;
+        // notifyListeners();
+      });
+      // return this._allPlayListName;
+    } else
+      return this._allPlayListName;
   }
 }
