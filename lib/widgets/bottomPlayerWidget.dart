@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/pages/PlayerScreen.dart';
 import 'package:provider/provider.dart';
@@ -62,16 +61,13 @@ class SongArt extends StatelessWidget {
 
 //song title widget
 class SongTitle extends StatelessWidget {
-  SongInfo getCurrentSong(BuildContext context) {
-    // Provider.of<MusicStateModel>(context, listen: false)
-    //     .setCurrentSongList(OpenDb.allSongs);
-    return Provider.of<MusicStateModel>(context, listen: false).getSong;
-  }
+  // SongInfo getCurrentSong(BuildContext context) {
+  //   return Provider.of<MusicStateModel>(context, listen: false).getSong;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    SongInfo song = getCurrentSong(context);
-    print("MY-song:  ----> $song");
+    // SongInfo song = getCurrentSong(context);
     return Consumer<MusicStateModel>(
         builder: (context, model, _) => Container(
               child: Column(

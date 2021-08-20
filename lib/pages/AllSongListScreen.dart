@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/models/musicStateModel.dart';
-import 'package:music_player/pages/songsListScreen.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/dialogBox.dart';
 import 'package:music_player/widgets/myDecoration.dart';
@@ -21,13 +20,7 @@ class _AllSongScreenState extends State<AllSongScreen> {
   @override
   void initState() {
     super.initState();
-    // getAllSongs();
   }
-
-  // void getAllSongs() async {
-  //   final FlutterAudioQuery audioQuery = new FlutterAudioQuery();
-  //   OpenDb.allSongs = await audioQuery.getSongs();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +68,8 @@ class _AllSongsState extends State<AllSongs> {
                 onPressed: () {
                   setState(() {
                     isEdit = !isEdit;
-                    OpenDb.pickedSongIdx = [];
+                    Provider.of<AllPlayList>(context, listen: false)
+                        .initSelectedSongIds();
                   });
                 },
                 child: isEdit ? Text("Cancel") : Text("Edit")),
@@ -103,13 +97,14 @@ class TrackList extends StatefulWidget {
 class _TrackListState extends State<TrackList> {
   @override
   Widget build(BuildContext context) {
+    final songs = Provider.of<AllPlayList>(context, listen: false).getAllSong;
     return Expanded(
       child: Container(
         child: ListView.builder(
-            itemCount: OpenDb.allSongs.length,
+            itemCount: songs.length,
             itemBuilder: (context, idx) => SongsCard(
                   isEdit: widget.isEdit,
-                  song: OpenDb.allSongs[idx],
+                  song: songs[idx],
                   idx: idx,
                 )),
       ),
@@ -127,33 +122,36 @@ class SongsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = Provider.of<AllPlayList>(context, listen: false);
     return ListTile(
         leading: Icon(Icons.music_note),
         title: Text(song.title.toString()),
         trailing: isEdit
             ? SelectBtn(
-                idx: idx,
+                id: song.id,
               )
             : null,
         onTap: () {
+          // final model = Provider.of<AllPlayList>(context, listen: false);
           isEdit
-              ? selectSong(idx)
+              ? model.addSelectedId(song.id)
               : Provider.of<MusicStateModel>(context, listen: false)
-                  .playOrpouse(idx, OpenDb.allSongs);
+                  .playOrpouse(idx, model.getAllSong);
           trackListState.setState(() {});
         });
   }
 }
 
 class SelectBtn extends StatelessWidget {
-  final int idx;
+  final String id;
 
-  const SelectBtn({Key key, this.idx}) : super(key: key);
+  const SelectBtn({Key key, this.id}) : super(key: key);
 
-  Color isDone() {
-    if (!OpenDb.pickedSongIdx.contains(idx)) {
-      print("IDX: $idx");
-      print("Contain: ${OpenDb.pickedSongIdx.contains(idx)}");
+  Color isDone(BuildContext context) {
+    final pickedIds = Provider.of<AllPlayList>(context).getSlectedSongIds;
+    if (!pickedIds.contains(id)) {
+      // print("IDX: $idx");
+      // print("Contain: ${OpenDb.pickedSongIdx.contains(idx)}");
       return Colors.grey;
     } else {
       return Colors.deepPurple;
@@ -162,7 +160,7 @@ class SelectBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color isDoneColor = isDone();
+    Color isDoneColor = isDone(context);
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(1),
@@ -181,6 +179,7 @@ class SelectBtn extends StatelessWidget {
 class EditBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final model = Provider.of<AllPlayList>(context, listen: false);
     return Container(
       height: MediaQuery.of(context).size.height * 0.11,
       width: MediaQuery.of(context).size.width,
@@ -192,9 +191,8 @@ class EditBottomSheet extends StatelessWidget {
             color: Colors.grey,
             child: IconButton(
                 onPressed: () {
-                  final favList =
-                      OpenDb.allPlayList.getPlayListByName("favorites");
-                  favList.addsongs(OpenDb.pickedSongIdx);
+                  final favList = model.getPlayListByName("favorites");
+                  favList.addsongs(model.getSlectedSongIds);
                   allSongsState.setState(() {
                     allSongsState.isEdit = !allSongsState.isEdit;
                   });
@@ -218,7 +216,8 @@ class EditBottomSheet extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                       context: context,
-                      builder: (context) => addToPlayListDialog(context));
+                      builder: (context) =>
+                          addToPlayListDialog(context, model));
                   print("pressed");
                 },
                 icon: Icon(

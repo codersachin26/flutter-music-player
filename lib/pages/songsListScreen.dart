@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/models/musicStateModel.dart';
+import 'package:music_player/models/playListModel.dart';
 import 'package:music_player/widgets/bottomPlayerWidget.dart';
 import 'package:music_player/widgets/myDecoration.dart';
 import 'package:music_player/widgets/playListHeaderContainer.dart';
@@ -21,11 +23,19 @@ class SongsListScreen extends StatefulWidget {
 }
 
 class _SongsListScreenState extends State<SongsListScreen> {
-  List<SongInfo> songs;
+  List<SongInfo> songs = [];
 
   @override
   void initState() {
     super.initState();
+    // setPlayList();
+  }
+
+  Future<List<SongInfo>> getPlayListSongs(BuildContext context) async {
+    AllPlayList model = Provider.of<AllPlayList>(context, listen: false);
+    print("object");
+    MyPlayList playlist = model.getPlayListByName(widget.playListName);
+    return await playlist.getSongs();
   }
 
   @override
@@ -45,7 +55,15 @@ class _SongsListScreenState extends State<SongsListScreen> {
                 iconColor: widget.iconColor,
               ),
               Divider(),
-              PlayList(songs: this.songs),
+              FutureBuilder<List<SongInfo>>(
+                  future: getPlayListSongs(context),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<SongInfo>> snapshot) {
+                    if (snapshot.hasData) {
+                      return PlayList(songs: snapshot.data);
+                    }
+                    return Text("Loding......");
+                  }),
               BottomPlayerWidget()
             ],
           ),
@@ -70,7 +88,7 @@ class PlayList extends StatelessWidget {
     return Expanded(
         child: Container(
       color: Colors.transparent,
-      child: songs == null
+      child: songs.isEmpty
           ? Text("no data")
           : ListView.builder(
               itemCount: songs.length,

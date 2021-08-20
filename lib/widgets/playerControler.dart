@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/models/musicStateModel.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:provider/provider.dart';
 
 class PlayerControler extends StatefulWidget {

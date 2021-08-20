@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/pages/AllSongListScreen.dart';
-import 'package:music_player/utils/db.dart';
 
 class PlayListNamebtn extends StatelessWidget {
-  final Map<String, dynamic> playlist;
+  final String playlist;
+  final AllPlayList model;
 
-  const PlayListNamebtn({Key key, this.playlist}) : super(key: key);
+  const PlayListNamebtn({Key key, this.playlist, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +14,15 @@ class PlayListNamebtn extends StatelessWidget {
         // padding: const EdgeInsets.all(10),
         child: ListTile(
       leading: Icon(Icons.playlist_add),
-      title: Text(playlist['name']),
+      title: Text(playlist),
       onTap: () {
-        final myPlayList =
-            OpenDb.allPlayList.getPlayListByName(playlist['name']);
-        myPlayList.addsongs(OpenDb.pickedSongIdx);
+        final myPlayList = model.getPlayListByName(playlist);
+        myPlayList.addsongs(model.getSlectedSongIds);
         allSongsState.setState(() {
           allSongsState.isEdit = !allSongsState.isEdit;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("your song added to ${playlist['name']} list")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("your song added to $playlist list")));
         Navigator.pop(context);
         print("nothing");
       },

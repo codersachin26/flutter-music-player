@@ -1,5 +1,6 @@
 // song list card
 import 'package:flutter/material.dart';
+import 'package:music_player/models/allPlayListModel.dart';
 import 'package:music_player/models/musicStateModel.dart';
 import 'package:music_player/pages/AllSongListScreen.dart';
 import 'package:music_player/pages/songsListScreen.dart';
@@ -39,17 +40,36 @@ class SongListCard extends StatelessWidget {
         ),
       ),
       onTap: () {
-        final MusicStateModel model =
+        final MusicStateModel model1 =
             Provider.of<MusicStateModel>(context, listen: false);
+        final AllPlayList model2 =
+            Provider.of<AllPlayList>(context, listen: false);
         if (playlist['name'] == 'All Songs') {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      ListenableProvider<MusicStateModel>.value(
-                        value: model,
+                  builder: (context) => MultiProvider(
+                        providers: [
+                          ListenableProvider<MusicStateModel>.value(
+                            value: model1,
+                            // child: AllSongScreen(),
+                          ),
+                          ListenableProvider<AllPlayList>.value(
+                            value: model2,
+                            // child: AllSongScreen(),
+                          )
+                        ],
                         child: AllSongScreen(),
                       )));
+
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             ListenableProvider<MusicStateModel>.value(
+          //               value: model1,
+          //               child: AllSongScreen(),
+          //             )));
         } else {
           final MusicStateModel model =
               Provider.of<MusicStateModel>(context, listen: false);

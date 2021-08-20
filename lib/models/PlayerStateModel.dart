@@ -1,10 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
-import 'package:music_player/utils/db.dart';
 
 class MusicPlayer {
   bool isplaying = false;
-  List<SongInfo> currentPlayList = OpenDb.allSongs;
+  List<SongInfo> currentPlayList = [];
   int idx = 0;
   String songLengh = "0:0";
   double audioTotalDuration = 0.0;

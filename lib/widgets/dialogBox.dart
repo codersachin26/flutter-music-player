@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/models/allPlayListModel.dart';
-import 'package:music_player/utils/db.dart';
 import 'package:music_player/widgets/playListNameCard.dart';
-import 'package:music_player/widgets/playListsContainer.dart';
-import 'package:provider/provider.dart';
 
 newPlaylistDialogBox(BuildContext context, AllPlayList model) {
   String playlistname;
@@ -68,12 +65,7 @@ myInputDecoration() {
   );
 }
 
-removePlayListDialog(BuildContext context, String playlist) {
-  AllPlayList getAllPlayListModel() {
-    final model = Provider.of<AllPlayList>(context);
-    return model;
-  }
-
+removePlayListDialog(BuildContext context, String playlist, AllPlayList model) {
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     child: Container(
@@ -102,9 +94,6 @@ removePlayListDialog(BuildContext context, String playlist) {
                     )),
                 TextButton(
                     onPressed: () {
-                      // OpenDb.allPlayList.removePlayList(playlist['name']);
-                      // playListContainerState.setState(() {});
-                      final model = getAllPlayListModel();
                       model.removePlayList(playlist);
                       Navigator.of(context).pop();
                     },
@@ -121,7 +110,8 @@ removePlayListDialog(BuildContext context, String playlist) {
   );
 }
 
-addToPlayListDialog(BuildContext context) {
+addToPlayListDialog(BuildContext context, AllPlayList model) {
+  final playListName = model.allPlayListName;
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
     child: Container(
@@ -137,10 +127,9 @@ addToPlayListDialog(BuildContext context) {
           Divider(),
           Expanded(
             child: ListView.builder(
-                itemCount: OpenDb.playlists.length,
-                itemBuilder: (context, idx) => PlayListNamebtn(
-                      playlist: OpenDb.playlists[idx],
-                    )),
+                itemCount: playListName.length,
+                itemBuilder: (context, idx) =>
+                    PlayListNamebtn(playlist: playListName[idx], model: model)),
           )
         ],
       ),

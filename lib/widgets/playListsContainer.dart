@@ -113,20 +113,30 @@ class PlayListView extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
+              final AllPlayList model =
+                  Provider.of<AllPlayList>(context, listen: false);
               showDialog(
                   context: context,
                   builder: (BuildContext context) =>
-                      removePlayListDialog(context, listname));
+                      removePlayListDialog(context, listname, model));
             }),
         onTap: () {
-          final MusicStateModel model =
+          final MusicStateModel model1 =
               Provider.of<MusicStateModel>(context, listen: false);
+          final AllPlayList model2 =
+              Provider.of<AllPlayList>(context, listen: false);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      ListenableProvider<MusicStateModel>.value(
-                        value: model,
+                  builder: (context) => MultiProvider(
+                        providers: [
+                          ListenableProvider<MusicStateModel>.value(
+                            value: model1,
+                          ),
+                          ListenableProvider<AllPlayList>.value(
+                            value: model2,
+                          )
+                        ],
                         child: SongsListScreen(
                           playListName: listname,
                           playListIcon: null,

@@ -43,10 +43,10 @@ class MusicDB {
   }
 
 // get all playlists from DB
-  Future<List<Map<String, dynamic>>> getPlayListsFromDB() async {
-    List<Map<String, dynamic>> playlist;
-    playlist = await MusicDB.dbConnection.query("playlist");
-    return playlist;
+  Future<List<Map<String, dynamic>>> getPlayListsNameFromDB() async {
+    List<Map<String, dynamic>> playlistsname;
+    playlistsname = await MusicDB.dbConnection.query("playlist");
+    return playlistsname;
   }
 
 // insert songs into playlist table
@@ -59,5 +59,10 @@ class MusicDB {
       });
     });
     await batch.commit(noResult: true);
+  }
+
+  Future<List<Map<String, dynamic>>> getPlayListFromDB(String name) async {
+    final tableName = name.replaceAll(" ", "").toLowerCase();
+    return await MusicDB.dbConnection.query(tableName);
   }
 }
