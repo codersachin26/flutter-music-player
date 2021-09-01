@@ -28,13 +28,12 @@ class _SongsListScreenState extends State<SongsListScreen> {
   @override
   void initState() {
     super.initState();
-    // setPlayList();
   }
 
   Future<List<SongInfo>> getPlayListSongs(BuildContext context) async {
     AllPlayList model = Provider.of<AllPlayList>(context, listen: false);
-    print("object");
-    MyPlayList playlist = model.getPlayListByName(widget.playListName);
+    MyPlayList playlist =
+        model.getPlayListByName(widget.playListName.toLowerCase());
     return await playlist.getSongs();
   }
 
@@ -55,15 +54,19 @@ class _SongsListScreenState extends State<SongsListScreen> {
                 iconColor: widget.iconColor,
               ),
               Divider(),
-              FutureBuilder<List<SongInfo>>(
-                  future: getPlayListSongs(context),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<SongInfo>> snapshot) {
-                    if (snapshot.hasData) {
-                      return PlayList(songs: snapshot.data);
-                    }
-                    return Text("Loding......");
-                  }),
+              Container(
+                height: MediaQuery.of(context).size.height * .69,
+                color: Colors.transparent,
+                child: FutureBuilder<List<SongInfo>>(
+                    future: getPlayListSongs(context),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<SongInfo>> snapshot) {
+                      if (snapshot.hasData) {
+                        return PlayList(songs: snapshot.data);
+                      }
+                      return Text("Loding......");
+                    }),
+              ),
               BottomPlayerWidget()
             ],
           ),
@@ -85,8 +88,7 @@ class PlayList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Container(
+    return Container(
       color: Colors.transparent,
       child: songs.isEmpty
           ? Text("no data")
@@ -105,6 +107,6 @@ class PlayList extends StatelessWidget {
                 );
               },
             ),
-    ));
+    );
   }
 }

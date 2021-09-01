@@ -18,8 +18,11 @@ class MyPlayList {
 
 // get all songs
   Future<List<SongInfo>> getSongs() async {
-    FlutterAudioQuery audioQuery = FlutterAudioQuery();
-    return await audioQuery.getSongsById(ids: this._ids);
+    if (this._ids.isNotEmpty) {
+      FlutterAudioQuery audioQuery = FlutterAudioQuery();
+      return await audioQuery.getSongsById(ids: this._ids);
+    } else
+      return [];
   }
 
 // add songs ids to playlist

@@ -15,11 +15,6 @@ class PlayListsScreen extends StatefulWidget {
 
 class _PlayListScreenState extends State<PlayListsScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(

@@ -11,7 +11,6 @@ class MusicPlayer {
 
   void play(String url) async {
     await audioPlayer.play(url).then((value) => this.setAudioLen());
-    // setAudioLen();
   }
 
   void pouse() {

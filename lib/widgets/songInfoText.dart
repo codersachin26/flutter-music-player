@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 class SongInfoText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // SongInfo song = OpenDb.musicPlayer.currentSongList[OpenDb.musicPlayer.idx];
     return Consumer<MusicStateModel>(
         builder: (context, model, _) => Container(
               padding: EdgeInsets.only(top: 10),

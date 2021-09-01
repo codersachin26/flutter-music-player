@@ -6,7 +6,7 @@ class MusicStateModel extends ChangeNotifier {
   bool isPlaying = false;
   List<SongInfo> currentSongList;
   int idx = 0;
-  int songLen;
+  int songLen = 0;
   int curPosition = 0;
   String audioDuration = "0:0";
   String curentPos = "0:0";
@@ -30,8 +30,9 @@ class MusicStateModel extends ChangeNotifier {
 
   // play audio
   void play(String url) async {
-    await audioPlayer.play(url).then((value) {
+    await audioPlayer.play(url, isLocal: true).then((value) {
       this.setAudioInfo();
+      notifyListeners();
     });
   }
 
@@ -43,11 +44,11 @@ class MusicStateModel extends ChangeNotifier {
   // play audio controller
   void playOrpouse(int idx, List<SongInfo> playlist) {
     if (!this.isPlaying || this.idx != idx) {
+      if (this.isPlaying) this.audioPlayer.release();
       this.play(playlist[idx].uri);
       this.isPlaying = true;
       this.idx = idx;
       this.currentSongList = playlist;
-      print("this.currentSongList--> ${this.currentSongList}");
     } else {
       this.isPlaying = false;
       this.pause();
@@ -87,15 +88,12 @@ class MusicStateModel extends ChangeNotifier {
 
   // set audio info
   void setAudioInfo() async {
-    await this.audioPlayer.getDuration().then((audioDuration) {
-      print("int Duration------->$audioDuration");
-      Duration len = Duration(milliseconds: audioDuration);
-      this.songLen = len.inSeconds;
-      print("int songLen------->$songLen");
-      this.audioDuration = "${len.inMinutes}:${len.inSeconds % 60}";
-      print("Mitnues --->>>> ${len.inMinutes}");
-      print("Seconds --->>>> ${len.inSeconds % 60}");
+    this.audioPlayer.onDurationChanged.listen((Duration audioDuration) {
+      this.songLen = audioDuration.inSeconds;
+      this.audioDuration =
+          "${audioDuration.inMinutes}:${audioDuration.inSeconds % 60}";
       this.currentPOs();
+      notifyListeners();
     });
   }
 
@@ -106,18 +104,15 @@ class MusicStateModel extends ChangeNotifier {
 
   void currentPOs() {
     this.audioPlayer.onAudioPositionChanged.listen((Duration p) {
-      // print("curretn------> $p");
       Duration len = Duration(milliseconds: p.inMilliseconds);
       this.curPosition = len.inSeconds;
       this.curentPos = "${len.inMinutes}:${len.inSeconds % 60}";
-      print("curPosition------> ${this.curPosition}");
       notifyListeners();
     });
   }
 
   void parseDuration(int duration) {
     this.curentPos = "${duration ~/ 60}:${duration % 60}";
-    print("this.curentPos----------?> ${this.curentPos}");
     notifyListeners();
   }
 
@@ -127,6 +122,14 @@ class MusicStateModel extends ChangeNotifier {
 
   void setOnChangePos(int pos) {
     this.curPosition = pos;
+    notifyListeners();
+  }
+
+  void disposeMusicPlayer() {
+    this.pause();
+    this.audioPlayer.stop();
+    this.audioPlayer.release();
+    this.audioPlayer.dispose();
     notifyListeners();
   }
 }

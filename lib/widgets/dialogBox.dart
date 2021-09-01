@@ -4,9 +4,6 @@ import 'package:music_player/widgets/playListNameCard.dart';
 
 newPlaylistDialogBox(BuildContext context, AllPlayList model) {
   String playlistname;
-  // AllPlayList getAllPlayListModel() {
-  //   return Provider.of<AllPlayList>(context, listen: false);
-  // }
 
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -41,8 +38,6 @@ newPlaylistDialogBox(BuildContext context, AllPlayList model) {
                     )),
                 TextButton(
                     onPressed: () {
-                      // final model = getAllPlayListModel();
-                      print("model>>>>>>>>>>>>>>$model");
                       model.addPlaylist(playlistname);
                       Navigator.of(context).pop();
                     },

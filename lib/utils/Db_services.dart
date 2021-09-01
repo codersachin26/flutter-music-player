@@ -9,7 +9,7 @@ class MusicDB {
   // open database connection
   static Future openDbConnection() async {
     WidgetsFlutterBinding.ensureInitialized();
-    final String dbpath = join(await getDatabasesPath(), "music_lite.db");
+    final String dbpath = join(await getDatabasesPath(), "music.db");
     final dbCon = await openDatabase(dbpath, onCreate: (db, virsion) {
       db.execute(
         'CREATE TABLE playlist(name TEXT)',
@@ -17,10 +17,10 @@ class MusicDB {
       db.execute(
         'CREATE TABLE favorites(id TEXT)',
       );
+      db.insert("playlist", {"name": "favorites"});
     }, version: 1);
 
     MusicDB.dbConnection = dbCon;
-    print("DB : $dbConnection");
   }
 
 // create new playlist table in database
@@ -31,7 +31,6 @@ class MusicDB {
     final String tableName = listName.replaceAll(" ", "");
     await MusicDB.dbConnection.execute('CREATE TABLE $tableName(id TEXT)');
     final id = await MusicDB.dbConnection.insert('playlist', values);
-    print("ID : $id");
   }
 
 // remove  playlist from DB

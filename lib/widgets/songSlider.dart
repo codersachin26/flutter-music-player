@@ -20,9 +20,7 @@ class _SongSliderState extends State<SongSlider> {
           builder: (context, model, _) => Slider(
               value: model.curPosition.toDouble(),
               min: 0.0,
-              max: Provider.of<MusicStateModel>(context, listen: false)
-                  .songLen
-                  .toDouble(),
+              max: model.songLen.toDouble(),
               onChanged: (newValue) {
                 setState(() {
                   model.parseDuration(newValue.toInt());
@@ -38,14 +36,11 @@ class _SongSliderState extends State<SongSlider> {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Consumer<MusicStateModel>(
-                  builder: (context, model, _) => Text(model.getAudioPos)),
-              Text(Provider.of<MusicStateModel>(context, listen: false)
-                  .getSongDuration)
-            ],
+          child: Consumer<MusicStateModel>(
+            builder: (context, model, _) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text(model.getAudioPos), Text(model.getSongDuration)],
+            ),
           ),
         )
       ],

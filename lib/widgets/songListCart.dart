@@ -52,33 +52,31 @@ class SongListCard extends StatelessWidget {
                         providers: [
                           ListenableProvider<MusicStateModel>.value(
                             value: model1,
-                            // child: AllSongScreen(),
                           ),
                           ListenableProvider<AllPlayList>.value(
                             value: model2,
-                            // child: AllSongScreen(),
                           )
                         ],
                         child: AllSongScreen(),
                       )));
-
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             ListenableProvider<MusicStateModel>.value(
-          //               value: model1,
-          //               child: AllSongScreen(),
-          //             )));
         } else {
-          final MusicStateModel model =
+          final MusicStateModel model1 =
               Provider.of<MusicStateModel>(context, listen: false);
+          final AllPlayList model2 =
+              Provider.of<AllPlayList>(context, listen: false);
+
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      ListenableProvider<MusicStateModel>.value(
-                        value: model,
+                  builder: (context) => MultiProvider(
+                        providers: [
+                          ListenableProvider<MusicStateModel>.value(
+                            value: model1,
+                          ),
+                          ListenableProvider<AllPlayList>.value(
+                            value: model2,
+                          )
+                        ],
                         child: SongsListScreen(
                           playListName: playlist['name'],
                           playListIcon: listIcon,

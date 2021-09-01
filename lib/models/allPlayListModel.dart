@@ -11,6 +11,7 @@ class AllPlayList extends ChangeNotifier {
   List<String> _selectedIds = [];
 
   void addPlaylist(String listName, [List<String> ids]) {
+    if (ids == null) ids = [];
     this._allPlayList[listName] = MyPlayList(listName, ids);
     this._allPlayListName.add(listName);
     musicDB.createPlayListInDB(listName);
@@ -23,7 +24,7 @@ class AllPlayList extends ChangeNotifier {
   // return selected song ids
   List<String> get getSlectedSongIds => this._selectedIds;
 
-  // set selected song ids
+  // init selected song ids
   void initSelectedSongIds() {
     this._selectedIds = [];
   }
@@ -38,6 +39,7 @@ class AllPlayList extends ChangeNotifier {
 
   void removePlayList(String name) {
     this._allPlayList.remove(name);
+    this._allPlayListName.remove(name);
     musicDB.removePlayListFromDB(name);
     notifyListeners();
   }

@@ -10,7 +10,6 @@ class BottomPlayerWidget extends StatelessWidget {
         child: Container(
           height: MediaQuery.of(context).size.height * .11,
           width: MediaQuery.of(context).size.width,
-          // color: Colors.red,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -23,7 +22,6 @@ class BottomPlayerWidget extends StatelessWidget {
               )
             ],
           ),
-
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: Colors.blueGrey[900],
@@ -61,13 +59,8 @@ class SongArt extends StatelessWidget {
 
 //song title widget
 class SongTitle extends StatelessWidget {
-  // SongInfo getCurrentSong(BuildContext context) {
-  //   return Provider.of<MusicStateModel>(context, listen: false).getSong;
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // SongInfo song = getCurrentSong(context);
     return Consumer<MusicStateModel>(
         builder: (context, model, _) => Container(
               child: Column(

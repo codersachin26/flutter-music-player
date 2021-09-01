@@ -132,7 +132,6 @@ class SongsCard extends StatelessWidget {
               )
             : null,
         onTap: () {
-          // final model = Provider.of<AllPlayList>(context, listen: false);
           isEdit
               ? model.addSelectedId(song.id)
               : Provider.of<MusicStateModel>(context, listen: false)
@@ -150,8 +149,6 @@ class SelectBtn extends StatelessWidget {
   Color isDone(BuildContext context) {
     final pickedIds = Provider.of<AllPlayList>(context).getSlectedSongIds;
     if (!pickedIds.contains(id)) {
-      // print("IDX: $idx");
-      // print("Contain: ${OpenDb.pickedSongIdx.contains(idx)}");
       return Colors.grey;
     } else {
       return Colors.deepPurple;

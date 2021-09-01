@@ -18,11 +18,6 @@ class PlayListContainer extends StatefulWidget {
 
 class _PlayListContainerState extends State<PlayListContainer> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
@@ -85,7 +80,6 @@ class _PlayListContainerState extends State<PlayListContainer> {
 class PlayListView extends StatelessWidget {
   final String listname;
   final int idx;
-  // int count;
 
   PlayListView({Key key, this.listname, this.idx}) : super(key: key);
 
@@ -97,8 +91,6 @@ class PlayListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // this.count = getSongCount(context);
-    print("ininini---===----");
     return Card(
       child: ListTile(
         tileColor: Colors.black,

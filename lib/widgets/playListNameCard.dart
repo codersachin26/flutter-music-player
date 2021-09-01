@@ -11,7 +11,6 @@ class PlayListNamebtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        // padding: const EdgeInsets.all(10),
         child: ListTile(
       leading: Icon(Icons.playlist_add),
       title: Text(playlist),
@@ -24,7 +23,6 @@ class PlayListNamebtn extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("your song added to $playlist list")));
         Navigator.pop(context);
-        print("nothing");
       },
     ));
   }
